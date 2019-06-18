@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Ritikesh"]
   spec.email         = ["ritikeshsisodiya@gmail.com"]
 
-  spec.summary       = %q{Light AR extension for basic reads.}
-  spec.description   = %q{Light weight extension for ActiveRecord that is useful for basic reads, caching etc.}
+  spec.summary       = %q{Light AR extension for basic reads/caching.}
+  spec.description   = %q{Lightweight extension for ActiveRecord that is useful for basic reads, caching etc.}
   spec.homepage      = "https://github.com/ritikesh/active_record_lite"
   spec.license       = "MIT"
 

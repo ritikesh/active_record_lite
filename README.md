@@ -1,8 +1,6 @@
 # ActiveRecordLite
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/active_record_lite`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Lightweight ActiveRecord extension for basic reads/caching.
 
 ## Installation
 
@@ -22,7 +20,51 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+To start using lite models, inject `has_lite` in your model and append `.to_lite` to your `ActiveRecord` `scope` or `chained` method calls.
+
+```ruby
+    class User < ActiveRecord::Base
+        has_lite
+    end
+
+    @user = User.where(id: 1).to_lite # <ActiveRecordLiteUser... >
+    @user.id # => 1
+    @user.name # => "name"
+```
+
+By default the lite class will include all columns defined in the parent model class. To limit to specific columns, pass the columns key to the `has_lite` call.
+
+```ruby
+    class User < ActiveRecord::Base
+        has_lite, columns: %w(id name)
+    end
+
+    @user = User.where(id: 1).to_lite
+    @user.id # => 1
+    @user.name # => "name"
+
+    @user.email # => undefined method
+```
+
+#### NOTE:
+To keep the gem lightweight, `serialization` is the implementer's job. Eg.
+```ruby
+    class User < ActiveRecord::Base
+        has_lite, columns: %w(id name preferences)
+
+        serialize :preferences, Hash
+
+        # to serialize preferences in lite model
+        class ActiveRecordLiteUser < ActiveRecordLite
+            def preferences
+                YAML.load(super)
+            end
+        end
+    end
+```
+#### TODO:
+1. Add Tests by mocking ActiveRecord
+2. Dynamic selects are not possible at the moment.
 
 ## Development
 
@@ -32,7 +74,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/active_record_lite. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/ritikesh/active_record_lite. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 ## License
 

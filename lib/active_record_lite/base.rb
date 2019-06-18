@@ -21,7 +21,7 @@ module ActiveRecordLite
         end
         
         def execute_select(sql)
-            ActiveRecord::Base.connection.execute(sql)
+            self.class.base_class.connection.execute(sql)
         end
         
         def read_attribute(attr_name)
