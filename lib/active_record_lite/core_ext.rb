@@ -8,10 +8,10 @@ module ActiveRecordLite
             class_eval <<-EOV
                 def self.to_lite
                     scoper = select(@_arlcolumns)
-                    ActiveRecordLite#{name.gsub("::", "")}.new(scoper.to_sql)
+                    ActiveRecordLite.perform(scoper.to_sql)
                 end
                 
-                class ActiveRecordLite#{name.gsub("::", "")} < ActiveRecordLite::Base
+                class ActiveRecordLite < ActiveRecordLite::Base
                     @base_class = parent
                     @attr_lookup = {}
                     columns.each do |column_name|

@@ -7,21 +7,24 @@ module ActiveRecordLite
                 @attr_lookup[column] = index
             }
         end
+
+        def self.perform(sql)
+            res = fetch_from_db(sql).map { |obj|
+                new(obj)
+            }
+            res.size > 1 ? res : res.first
+        end
         
-        def initialize(sql)
-            fetch_from_db(sql)
+        def initialize(obj)
+            @attributes = obj
         end
         
         private
         
         attr_accessor :attributes
         
-        def fetch_from_db(sql)
-            @attributes = execute_select(sql).first
-        end
-        
-        def execute_select(sql)
-            self.class.base_class.connection.execute(sql)
+        def self.fetch_from_db(sql)
+            base_class.connection.execute(sql)
         end
         
         def read_attribute(attr_name)

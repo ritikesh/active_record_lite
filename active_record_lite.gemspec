@@ -14,6 +14,8 @@ Gem::Specification.new do |spec|
   spec.homepage      = "https://github.com/ritikesh/active_record_lite"
   spec.license       = "MIT"
 
+  spec.files         = Dir["lib/**/*", "LICENSE.txt", "Rakefile", "README.md"]
+
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
   # to allow pushing to a single host or delete this section to allow pushing to any host.
   if spec.respond_to?(:metadata)
@@ -38,7 +40,7 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "bundler", "~> 1.16"
   spec.add_development_dependency "rake", "~> 10.0"
-  spec.add_development_dependency "minitest", "~> 5.0"
+  spec.add_development_dependency "rspec"
 
-  spec.add_dependency "rails", "4.2.11.1"
+  spec.add_dependency "rails", "~> 4.2"
 end

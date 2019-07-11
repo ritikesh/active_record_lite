@@ -27,9 +27,13 @@ To start using lite models, inject `has_lite` in your model and append `.to_lite
         has_lite
     end
 
-    @user = User.where(id: 1).to_lite # <ActiveRecordLiteUser... >
+    @user = User.where(id: 1).to_lite # <User::ActiveRecordLite... >
     @user.id # => 1
     @user.name # => "name"
+
+    @users = User.where(tenant_id: 1).to_lite # [<User::ActiveRecordLite... >, ...]
+    @users.first.id # => 1
+    @users[-1].id # => 100
 ```
 
 By default the lite class will include all columns defined in the parent model class. To limit to specific columns, pass the columns key to the `has_lite` call.
@@ -47,7 +51,7 @@ By default the lite class will include all columns defined in the parent model c
 ```
 
 #### NOTE:
-To keep the gem lightweight, `serialization` is the implementer's job. Eg.
+1. To keep the gem lightweight, `serialization` is the implementer's job. Eg.
 ```ruby
     class User < ActiveRecord::Base
         has_lite, columns: %w(id name preferences)
@@ -55,13 +59,14 @@ To keep the gem lightweight, `serialization` is the implementer's job. Eg.
         serialize :preferences, Hash
 
         # to serialize preferences in lite model
-        class ActiveRecordLiteUser < ActiveRecordLite
+        class ActiveRecordLite < ActiveRecordLite
             def preferences
                 YAML.load(super)
             end
         end
     end
 ```
+2. active_record_lite internally uses active_record, hence model level default scopes will apply when querying for the record from db.
 #### TODO:
 1. Add Tests by mocking ActiveRecord
 2. Dynamic selects are not possible at the moment.
