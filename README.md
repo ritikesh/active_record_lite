@@ -1,6 +1,6 @@
 # ActiveRecordLite
 
-Lightweight ActiveRecord extension for basic reads/caching.
+Lightweight ActiveRecord extension for basic reads and caching.
 
 ## Installation
 
@@ -57,23 +57,30 @@ By default the lite class will include all columns defined in the parent model c
         has_lite, columns: %w(id name preferences)
 
         serialize :preferences, Hash
-
-        # to serialize preferences in lite model
-        class ActiveRecordLite < ActiveRecordLite
-            def preferences
-                YAML.load(super)
-            end
+    end
+    
+    # to serialize preferences in lite model
+    class User::ActiveRecordLite < ActiveRecordLite::Base
+        def preferences
+            YAML.load(read_attribute('preferences'.freeze))
         end
     end
 ```
 2. active_record_lite internally uses active_record, hence model level default scopes will apply when querying for the record from db.
+
+3. `Boolean` columns in rails are very smaller integers - literally, `TINYINT`. Internally, `ActiveRecord` magic typecasts them to behave like bools and adds the `column_name?` methods to the model. This is also left to the implementer.
+```ruby
+    class Company::ActiveRecordLite < ActiveRecordLite::Base
+        def active
+            read_attribute('active'.freeze) == 1
+        end
+        alias :active? :active
+    end
+```
 #### TODO:
-1. Add Tests by mocking ActiveRecord
-2. Dynamic selects are not possible at the moment.
+1. Dynamic selects are not possible currently.
 
 ## Development
-
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
 To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
