@@ -24,11 +24,16 @@ module ActiveRecordLite
         attr_accessor :attributes
         
         def self.fetch_from_db(sql)
-            base_class.connection.execute(sql)
+            base_class.connection.select_rows(sql)
         end
         
         def read_attribute(attr_name)
             attributes[self.class.attr_lookup(attr_name)]
+        end
+
+        def memoize_results(key)
+            return instance_variable_get(key) if instance_variable_defined?(key)
+            instance_variable_set(key, yield)
         end
 
         def self.attr_lookup(attr_name)

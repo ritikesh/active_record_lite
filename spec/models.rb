@@ -3,6 +3,8 @@ class User < ActiveRecord::Base
     
     belongs_to :company
 
+    serialize :preferences
+
     has_lite
 end
 
@@ -11,5 +13,5 @@ class Company < ActiveRecord::Base
     
     has_many :users
 
-    has_lite columns: %w(id name)
+    has_lite columns: %w(id name active)
 end

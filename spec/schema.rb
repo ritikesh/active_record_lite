@@ -4,7 +4,8 @@ ActiveRecord::Schema.define do
     create_table :users, :force => true do |t|
         t.string :name
         t.string :email
-        
+
+        t.text :preferences
         t.timestamps
     end
     
@@ -12,6 +13,7 @@ ActiveRecord::Schema.define do
         t.string :name
         t.string :location
         
+        t.boolean :active
         t.timestamps
     end
     

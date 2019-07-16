@@ -54,34 +54,14 @@ By default the lite class will include all columns defined in the parent model c
 ```
 
 #### NOTE:
-1. To keep the gem lightweight, `serialization` is the implementer's job. Eg.
-```ruby
-    class User < ActiveRecord::Base
-        has_lite, columns: %w(id name preferences)
+1. active_record_lite internally uses active_record, hence model level default scopes will apply when querying for the record from db.
 
-        serialize :preferences, Hash
-    end
-    
-    # to serialize preferences in lite model
-    class User::ActiveRecordLite < ActiveRecordLite::Base
-        def preferences
-            YAML.load(read_attribute('preferences'.freeze))
-        end
-    end
-```
-2. active_record_lite internally uses active_record, hence model level default scopes will apply when querying for the record from db.
+2. `to_lite` should be called after all `serialize` calls in the model. `to_lite` relies on `serialised_attributes` which will be correctly initialised only after all the `serialize` calls.
 
-3. `Boolean` columns in rails are very smaller integers - literally, `TINYINT`. Internally, `ActiveRecord` magic typecasts them to behave like bools and adds the `column_name?` methods to the model. This is also left to the implementer.
-```ruby
-    class Company::ActiveRecordLite < ActiveRecordLite::Base
-        def active
-            read_attribute('active'.freeze) == 1
-        end
-        alias :active? :active
-    end
-```
+3. Dynamic selects are not possible. `to_lite` will run a `unscope(:select)` on the current chained scope.
+
 #### TODO:
-1. Dynamic selects are not possible currently.
+1. Add support to eager load lite objects via AR relation.currently.
 
 ## Development
 

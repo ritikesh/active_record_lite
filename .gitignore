@@ -8,3 +8,4 @@
 /tmp/
 Gemfile.lock
 .vscode
+.byebug_history
