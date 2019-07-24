@@ -46,4 +46,19 @@ describe ActiveRecordLite, use_connection: true do
         expect(company.active?).to eq(true)
         company.unstub(:read_attribute)
     end
+
+    it "must allow dynamic selects" do
+        dynamic_company = Company.where(id: 1).to_lite(:name, :id)
+
+        expect(dynamic_company.name).to eq("test")
+        expect(dynamic_company.id).to eq(1)
+    end
+
+    it "must allow only supported properties in dynamic selects" do
+        dynamic_company = Company.where(id: 1).to_lite(:id, :location)
+
+        expect { dynamic_company.location }.to raise_error(NoMethodError)
+        expect(dynamic_company.id).to eq(1)
+        expect(dynamic_company.name).to eq(nil)
+    end
 end

@@ -53,12 +53,24 @@ By default the lite class will include all columns defined in the parent model c
     @user.email # => undefined method
 ```
 
+For specific use-cases, you can also limit loading the number of columns by passing the selectable columns to `to_lite`.
+
+```ruby
+    class User < ActiveRecord::Base
+        has_lite, columns: %w(id name email)
+    end
+
+    @user = User.where(id: 1).to_lite(:id, :name) # select id, name from users where id = 1;
+    @user.id # => 1
+    @user.name # => "name"
+
+    @user.email # => nil
+```
+
 #### NOTE:
 1. active_record_lite internally uses active_record, hence model level default scopes will apply when querying for the record from db.
 
 2. `to_lite` should be called after all `serialize` calls in the model. `to_lite` relies on `serialised_attributes` which will be correctly initialised only after all the `serialize` calls.
-
-3. Dynamic selects are not possible. `to_lite` will run a `unscope(:select)` on the current chained scope.
 
 #### TODO:
 1. Add support to eager load lite objects via AR relation.currently.

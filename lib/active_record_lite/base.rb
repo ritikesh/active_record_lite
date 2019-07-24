@@ -8,27 +8,34 @@ module ActiveRecordLite
             }
         end
 
-        def self.perform(sql)
+        def self.perform(sql, selects)
             res = fetch_from_db(sql).map { |obj|
-                new(obj)
+                new(obj, selects)
             }
             res.size > 1 ? res : res.first
         end
         
-        def initialize(obj)
+        def initialize(obj, selects)
             @attributes = obj
+            @selects = selects&.map!(&:to_s)
         end
         
         private
         
-        attr_accessor :attributes
+        attr_reader :attributes, :selects
         
         def self.fetch_from_db(sql)
             base_class.connection.select_rows(sql)
         end
         
         def read_attribute(attr_name)
-            attributes[self.class.attr_lookup(attr_name)]
+            if selects
+                index = selects.index(attr_name)
+                index && attributes[index]
+            else
+                index = self.class.attr_lookup(attr_name)
+                attributes[index]
+            end
         end
 
         def memoize_results(key)

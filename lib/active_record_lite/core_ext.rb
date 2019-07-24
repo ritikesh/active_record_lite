@@ -5,9 +5,10 @@ module ActiveRecordLite
                 @_arlcolumns = options.delete(:columns)
             end
             class_eval <<-EOV
-                def self.to_lite
-                    scoper = unscope(:select).select(@_arlcolumns)
-                    ActiveRecordLite.perform(scoper.to_sql)
+                def self.to_lite(*args)
+                    selects = args.presence || @_arlcolumns
+                    scoper = unscope(:select).select(selects)
+                    ActiveRecordLite.perform(scoper.to_sql, selects)
                 end
                 
                 class ActiveRecordLite < ActiveRecordLite::Base
