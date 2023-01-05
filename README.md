@@ -1,7 +1,6 @@
 # ActiveRecordLite
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/ritikesh/active_record_lite/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/ritikesh/active_record_lite/tree/master)
 [![Gem Version](https://badge.fury.io/rb/active_record_lite.svg)](https://badge.fury.io/rb/active_record_lite)
-![Downloads](https://ruby-gem-downloads-badge.herokuapp.com/active_record_lite?type=total)
 
 Lightweight ActiveRecord extension for basic reads and caching.
 
